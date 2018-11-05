@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Yu Tae Young</title>
+</head>
+<body>
+    <h1 id="hphk">Happy Hacking!</h1>
+    <div>
+        <a href="#" id="a">Who said that?</a>
+    </div>
+    <div>
+        <a href="#" id="b">Said what?</a>
+    </div>
+    
+    <script>
+        const h1 = document.querySelector('#hphk');
+        const a = document.querySelector('#a');
+        const b = document.querySelector('#b');
+        a.addEventListener('click', () => {
+            h1.innerHTML = 'Richard Stallman';
+        });
+        
+        b.addEventListener('click', () => {
+            h1.innerHTML = 'Happy Hacking!';
+        });
+    </script>
+</body>
+</html>
