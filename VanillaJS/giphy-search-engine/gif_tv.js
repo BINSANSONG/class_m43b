@@ -19,11 +19,11 @@ const animateTV = () => {
 
   GiphyAJAXCall.addEventListener("load", e => {
     const rawData = e.target.response;
-    pushToDOM(rawData);
+    pushTvToDOM(rawData);
   });
 };
 
-const pushToDOM = data => {
+const pushTvToDOM = data => {
   tvArea.innerHTML = null;
   const parsedData = JSON.parse(data);
   const imgDataSet = parsedData.data;
