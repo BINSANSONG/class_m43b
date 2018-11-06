@@ -1,5 +1,15 @@
 /* 1. 검색 */
 
+const inputArea = document.querySelector('.js-search');
+inputArea.addEventListener( 'keyup', e => {
+  if (e.which === 13) SoundCloudAPI.getTracks(inputArea.value);
+});
+
+const searchButton = document.querySelector('.js-submit');
+searchButton.addEventListener( 'click', () => {
+  SoundCloudAPI.getTracks(inputArea.value);
+});
+
 /* 2. SoundCloud API  사용하기 */
 const SoundCloudAPI = {
   init: () => {
@@ -8,7 +18,7 @@ const SoundCloudAPI = {
     });
   },
 
-  getTrack: inputValue => {
+  getTracks: inputValue => {
     SC.get("/tracks", {
       q: inputValue
     }).then(function(tracks) {
@@ -18,12 +28,12 @@ const SoundCloudAPI = {
 };
 
 SoundCloudAPI.init();
-SoundCloudAPI.getTrack('busker');
 
 /* 3. 카드 보여주기 */
 SoundCloudAPI.renderTracks = tracks => {
+  let searchResults = document.querySelector('#js-search-results');
+  searchResults.innerHTML = null;
   tracks.forEach((track) => {
-    console.log(track);
     // Card
     const card = document.createElement("div");
     card.classList.add("card");
@@ -52,6 +62,9 @@ SoundCloudAPI.renderTracks = tracks => {
     // Button
     const button = document.createElement("div");
     button.classList.add("ui", "bottom", "attached", "button", "js-button");
+    button.addEventListener('click', (e) => {
+      SoundCloudAPI.addPlaylist(track.permalink_url);
+    });
 
     const icon = document.createElement("i");
     icon.classList.add("add", "icon");
@@ -72,10 +85,20 @@ SoundCloudAPI.renderTracks = tracks => {
     card.appendChild(content);
     card.appendChild(button);
 
-    const searchResults = document.querySelector("#js-search-results");
     searchResults.appendChild(card);
   });
 };
 
 
 /* 4. Playlist 에 추가하고 실제로 재생하기 */
+
+SoundCloudAPI.addPlaylist = (trackURL) => {
+  SC.oEmbed(trackURL, {
+    auto_play: true
+  }).then(function(embed){
+    const sidebar = document.querySelector('#js-playlist');
+    const playbox = document.createElement('div');
+    playbox.innerHTML = embed.html
+    sidebar.insertBefore(playbox, sidebar.firstChild)
+  });
+};
