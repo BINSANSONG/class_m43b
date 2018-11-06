@@ -67,9 +67,11 @@ var users = [
   {id: 4, admin: true},
   {id: 5, admin: false}
 ]
+// 답 1
 var admins = users.filter(function(user){
   return user.admin; // === true
 });
+// 답 2
 var admins = users.filter(user => user.admin);
 
 /* 실습 3 */
