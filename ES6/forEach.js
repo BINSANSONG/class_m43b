@@ -22,7 +22,7 @@ function add (number){
 numbers.forEach(add);
 console.log(sum);
 
-/* In real world */
+/* 실제로는? */
 spamMails = [];
 function deleteMail(){};
 
