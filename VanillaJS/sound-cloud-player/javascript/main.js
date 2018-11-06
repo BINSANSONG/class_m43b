@@ -1,7 +1,15 @@
+const sidebar = document.querySelector('#js-playlist');
+sidebar.innerHTML = localStorage.getItem('playlist');
+
+const resetButton = document.querySelector('#js-reset');
+resetButton.addEventListener('click', () => {
+  localStorage.clear();
+  sidebar.innerHTML = null;
+})
 /* 1. 검색 */
 
 const inputArea = document.querySelector('.js-search');
-inputArea.addEventListener( 'keyup', e => {
+inputArea.addEventListener('keyup', e => {
   if (e.which === 13) SoundCloudAPI.getTracks(inputArea.value);
 });
 
@@ -9,6 +17,8 @@ const searchButton = document.querySelector('.js-submit');
 searchButton.addEventListener( 'click', () => {
   SoundCloudAPI.getTracks(inputArea.value);
 });
+
+
 
 /* 2. SoundCloud API  사용하기 */
 const SoundCloudAPI = {
@@ -96,9 +106,12 @@ SoundCloudAPI.addPlaylist = (trackURL) => {
   SC.oEmbed(trackURL, {
     auto_play: true
   }).then(function(embed){
-    const sidebar = document.querySelector('#js-playlist');
     const playbox = document.createElement('div');
     playbox.innerHTML = embed.html
     sidebar.insertBefore(playbox, sidebar.firstChild)
+
+    // local storage
+    localStorage.setItem('playlist', sidebar.innerHTML);
+    console.log(logStorage);
   });
 };

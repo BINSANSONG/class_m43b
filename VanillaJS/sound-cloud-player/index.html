@@ -10,9 +10,12 @@
 <body id="soundcloud-player">
 
 <div class="ui container col">
-
-    <div id="js-playlist" class="col-left">
-        <div class="inner"></div>
+    
+    <div class="col-left">
+        <button id="js-reset" class="ui inverted purple button">Reset</button>
+        <div id="js-playlist">
+            <div class="inner"></div>
+        </div>
     </div>
 
     <div class="col-right">
@@ -22,7 +25,7 @@
                 <input type="text" placeholder="Search for a song or artist..." class="js-search input-search">
                 <i class="search icon js-submit"></i>
             </div>
-
+            
             <div id="js-search-results" class="search-results ui cards">
                 <!-- render card -->
             </div>
