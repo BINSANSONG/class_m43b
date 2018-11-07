@@ -441,7 +441,7 @@
   }
   
   var seq1 = "((()()))()";
-  var seq2 =  ")()"";
+  var seq2 =  ")()";
   isBalancedParens(seq1); // true
   isBalancedParens(seq2); // false
   ```
