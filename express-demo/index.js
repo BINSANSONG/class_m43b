@@ -24,9 +24,6 @@ app.get("/api/posts/:year", (req, res) => {
   res.send(req.query);
 });
 
-"/getPosts/100"
-"/updatePosts/13"
-
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => console.log(`Listening on port ${port}...`));
