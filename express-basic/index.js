@@ -8,7 +8,7 @@ const movies = [
   { id: 1, title: 'Bohemian Rhapsody' },
   { id: 2, title: 'Matrix' },
   { id: 3, title: 'Edge of Tommorow' },
-]
+];
 
 app.get('/', (req, res) => {
   res.send('Happy Hacking');
