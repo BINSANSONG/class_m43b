@@ -1,7 +1,7 @@
 const home = require('./routes/home');
 const movies = require('./routes/movies');
 const debug = require('debug')('app:startup');
-const config = require('config');
+// const config = require('config');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const auth = require('./middlewares/auth');
