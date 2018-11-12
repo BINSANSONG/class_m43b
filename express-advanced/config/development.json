@@ -1,0 +1,7 @@
+{
+  "name": "Advanced Express APP - DEV",
+  "DB": {
+    "host": "localhost",
+    "password": 123123
+  }
+}
