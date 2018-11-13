@@ -41,6 +41,7 @@ async function getCourses() {
     // .limit(10)
     // .sort({ name: -1 })
     // .select({ name: 1, tags: 1 })
+    // .select('name tags')
     // .find({ author: /^ne/i })
     // .find({ author: /hn$/})
     // .find({ author: /.*oh.*/})
