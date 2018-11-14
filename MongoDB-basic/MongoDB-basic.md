@@ -488,3 +488,241 @@ $ mongoimport --db exercise1 --collection courses --drop --file data.json --json
     2. price 15 이상이거나,
     3. name 에 대소문자 구분없이 'js' 가 들어간 강의들을,
     4. 출력해보자구!
+
+### Solutions
+
+* exercise1
+
+  ```js
+  const mongoose = require('mongoose');
+  
+  mongoose.connect('mongodb://localhost/exercise-basic', { useNewUrlParser: true })
+    .then(() => console.log('DB connected'))
+    .catch(error => console.error(error.message));
+  
+  const courseSchema = mongoose.Schema({
+    name: String,
+    author: String,
+    tags: [ String ],
+    date: { type: Date, default: Date.now() },
+    isPublished: Boolean,
+    price: Number,
+  });
+  
+  const Course = mongoose.model('Course', courseSchema);
+  
+  async function getCoursesWithGivenCondition() {
+    return await Course
+      .find({ isPublished: true, tags: 'backend' })
+      .sort({ name: 1 })
+      .select({ name: 1, author: 1 });
+  }
+  
+  async function run() {
+    const courses = await getCoursesWithGivenCondition();
+    console.log(courses);
+  }
+  
+  run();
+  
+  // console.log(getCoursesWithGivenCondition()); XX
+  // getCoursesWithGivenCondition().then(courses => console.log(courses));
+  ```
+
+* exercise2
+
+  ```js
+  ...
+  async function getCoursesWithGivenCondition() {
+    return await Course
+      // .find({ isPublished: true, tags: { $in: ['frontend', 'backend']  } }) // tags: ['frontend', 'backend'] 둘다 가진놈민!
+      .find({ isPublished: true })
+      .or([{ tags: 'frontend' }, { tags: 'backend' }])
+      .sort('-price')
+      .select('name price');
+  }
+  
+  getCoursesWithGivenCondition().then(courses => console.log(courses));
+  ```
+
+* exercise3
+
+  ```js
+  ...
+  async function getCoursesWithGivenCondition() {
+    return await Course
+      // .find({ isPublished: true, tags: { $in: ['frontend', 'backend']  } }) // tags: ['frontend', 'backend'] 둘다 가진놈민!
+      .find()
+      .or([
+        { price: {$gte: 15 } },
+        { name: /.*js.*/i}
+      ])
+      .select('name price')
+  }
+  
+  getCoursesWithGivenCondition().then(courses => console.log(courses));
+  ```
+
+## Updating Documents
+
+조회는 신나게 해 봤으니 이제 update 해보자!
+
+Update 에는 두가지 패턴이 있다. 
+
+* Query First
+  1. ` findByID()`
+  2. 수정
+  3. 저장
+* Update First
+  1. 직접 수정
+  2. Update 된 document 가져오기.
+
+### Query First
+
+가장 흔하게 보는 방식이다. 사용자로부터 입력을 받고, 해당 값의 유효성을 검사하고 싶다면 이 방법을 사용하는 것이 좋다.
+
+```js
+...
+async function updateCourse(id) {
+	const course = await Course.findById(id); // 찾기
+  if(!course) return;
+  
+  // 수정
+  course.isPublished = true;
+  course.author = 'Another Author';
+  
+  // 저장
+	const result = await course.save;
+}
+
+updateCourse();
+```
+
+`.set()` 로 도 가능!
+
+```js
+...
+async function updateCourse1(id) {
+	const course = await Course.findById(id); // 찾기
+  if(!course) return;
+  
+  // 수정
+  course.set({
+    isPublished: true,
+    author: 'Anoter Author',
+  })
+  
+  // 저장
+	const result = await course.save; // Course instance
+}
+
+updateCourse1('<ObjectID>');
+```
+
+### Update First
+
+위와 다르게, 유효성 검사를 할 필요가 없고, 그저 도큐먼트를 수정하고 싶다거나, 여러개의 도큐먼트를 한번에 수정하고 싶다면? 가령 모든 강의를 `isPublished: false` 로 만들고 싶다면?
+
+https://docs.mongodb.com/manual/reference/operator/update/
+
+```js
+Model.update({ key: value }, { // key 가 value 인 모든 object 들
+  $<OPERATOR>: <Value>
+}) // object 가 아닌 결과를 return 한다.
+```
+
+가령 Facebook 같은경우, 좋아요를 받으면 좋아요를 하나 올리는(`$inc`) 기능이 필요하다! 굳이 하나의 게시물을 찾아서 바꾸고 저장하는 식의 작업은 번거롭다.
+
+하나만 바꿀 때
+
+```js
+...
+async function updateCourse2(id) {
+  const result = await Course.updateOne({ _id: id }, {
+    $set: {
+    author: 'tak',
+      isPublished: false
+    }
+  });
+  console.log(result); // 처리 결과
+}
+
+updateCourse2('<ObjectID>');
+```
+
+여러개 바꿀 때
+
+```js
+...
+async function updateCourse2() {
+  const result = await Course.updateMany({ isPublished: true }, {
+    $set: {
+    	author: 'tak',
+      isPublished: false
+    }
+  });
+  console.log(result); // 처리 결과
+}
+
+updateCourse2('<ObjectID>');
+```
+
+처리 결과가 아니라 Course object 를 받고 싶을 때.(Before update)
+
+```js
+...
+async function updateCourse3(id) {
+  // 변수명 course
+  const course = await Course.findByIdAndUpdate(id, { 
+    $set: {
+    	author: 'neo',
+      isPublished: true
+    }
+  });
+  console.log(result); // Course object !before update
+}
+
+updateCourse2('<ObjectID>');
+```
+
+처리 결과가 아니라 Course object 를 받고 싶을 때.(after update)
+
+```js
+...
+async function updateCourse3(id) {
+  // 변수명 course
+  const course = await Course.findByIdAndUpdate(id, { 
+    $set: {
+    	author: 'neo',
+      isPublished: true
+    }
+  }, { new: true });
+  console.log(result); // Course object !after update
+}
+
+updateCourse2('<ObjectID>');
+```
+
+
+
+## Removing Documents
+
+```js
+...
+async function deleteCourse(id) {
+  const result = await Course.deleteOne({ _id: id })
+  console.log(result);
+}
+deleteCourse('5beabe00e2368650e12f7430');
+```
+
+결과를 출력한다. 삭제한 object 를 받고싶다면
+
+```js
+...
+async function deleteCourse(id) {
+  const course = await Course.findByIdAndDelete(id)
+  console.log(course);
+}
+deleteCourse('5beabe00e2368650e12f7430');
+```
