@@ -1,14 +1,17 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const genreSchema = new mongoose.Schema({
   name: {
     type: String,
+    index: { unique: true },
     required: true,
     minlength: 3,
-    maxlength: 50
+    maxlength: 50,
   }
 });
+genreSchema.plugin(uniqueValidator);
 
 const Genre = mongoose.model('Genre', genreSchema);
 
