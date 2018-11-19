@@ -134,7 +134,7 @@ $ touch index.js
 ```jsx
 // React 와 ReactDOM 라이브러리 import
 import React from 'react';
-import ReactDOM from 'react-deom';
+import ReactDOM from 'react-dom';
 
 // React 컴포넌트 생성
  
@@ -144,8 +144,8 @@ import ReactDOM from 'react-deom';
 
 | ES6 Modules                      | CommonJS Modules                        |
 | -------------------------------- | --------------------------------------- |
-| `imort <name> from <ModuleName>` | `const <name> = require('<ModuleName')` |
-| ES6 Imort 방법                   | 일반 JS Import 방법                     |
+| `import <name> from <ModuleName>` | `const <name> = require('<ModuleName>')` |
+| ES6 Import 방법                   | 일반 JS Import 방법                     |
 | dynamic Loading 가능             | Destructuring 으로 tree shaking 가능    |
 | 순서대로(Synchronous) import     | 비동기 (asynchronous) import            |
 
@@ -162,7 +162,7 @@ import ReactDOM from 'react-deom';
 ```jsx
 // React 와 ReactDOM 라이브러리 import
 import React from 'react';
-import ReactDOM from 'react-deom';
+import ReactDOM from 'react-dom';
 
 // React 컴포넌트 생성
 const App = () => {
