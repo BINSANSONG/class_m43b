@@ -4,28 +4,15 @@ import SeasonDisplay from "./SeasonDisplay";
 
 class App extends React.Component {
   
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      lat: null, // 아직모른다. but 들어는 온다.
-      errorMessage: '',
-    };
-
-    window.navigator.geolocation.getCurrentPosition(
-      position => {
-        this.setState({ lat: position.coords.latitude });
-      },
-      error => { 
-        this.setState({ errorMessage: error.message });
-      }
-    );
-  }
-
+  state = {
+    lat: null, // 아직모른다. but 들어는 온다.
+    errorMessage: '',
+  };
+  
   render() {
     // 사용자 허용함
     if (!this.state.errorMessage && this.state.lat) {
-      return (<div>Lat: {this.state.lat}</div>);
+      return (<SeasonDisplay latitude={this.state.lat}/>);
     }
 
     // 사용자 거부함
@@ -35,6 +22,17 @@ class App extends React.Component {
     
     // 허용/거부 기다리는 중..
     return(<div>Loading....</div>)
+  }
+
+  componentDidMount () {
+    window.navigator.geolocation.getCurrentPosition(
+      position => {
+        this.setState({ lat: position.coords.latitude });
+      },
+      error => { 
+        this.setState({ errorMessage: error.message });
+      }
+    );
   }
 }
 
