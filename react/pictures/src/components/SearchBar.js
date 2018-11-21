@@ -7,6 +7,16 @@ class SearchBar extends Component {
     console.log(this.state);
   }
 
+  removeBadWords(input) {
+    this.setState({ keyword: input }, () => {
+      if(/.*fool.*/i.test(this.state.keyword)) {
+        this.setState({ 
+          keyword: this.state.keyword.replace(/fool/i, 'NOPE') 
+        })
+      }
+    });
+  }
+
   render() {
     return (
       <div className="ui segment container">
@@ -15,7 +25,7 @@ class SearchBar extends Component {
           <input
            id="keyword" 
            type="text"
-           onChange={e => this.setState({ keyword: e.target.value.toUpperCase() })}
+           onChange={e => this.removeBadWords(e.target.value)}
            value={this.state.keyword}
           />
         </form>
