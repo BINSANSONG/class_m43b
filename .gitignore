@@ -1,3 +1,5 @@
 node_modules/
 
-MERN/
+MERN/server/
+
+*_client_id*.json
